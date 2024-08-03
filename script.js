@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Añadir registro a la tabla
     const addRecordToTable = (record) => {
-        const newRow = historyTable.insertRow();
+        const newRow = historyTable.insertRow(0); // Insertar en la primera posición
         
         newRow.insertCell().textContent = record.datetime;
         newRow.insertCell().textContent = record.brand;
