@@ -8,6 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const toggleHistoryBtn = document.getElementById('toggleHistoryBtn');
     const historyContent = document.getElementById('historyContent');
 
+    // Convertir imagen a base64
+    const toBase64 = (file) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+
     // Cargar registros desde localStorage
     const loadHistory = () => {
         const records = JSON.parse(localStorage.getItem('vehicleRecords')) || [];
@@ -45,11 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Manejar envío del formulario
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = async (event) => {
         event.preventDefault();
 
         const formData = new FormData(vehicleForm);
-        const images = Array.from(formData.getAll('image')).slice(0, 4).map(image => URL.createObjectURL(image));
+        const images = await Promise.all(Array.from(formData.getAll('image')).slice(0, 4).map(file => toBase64(file)));
         const record = {
             datetime: formData.get('datetime'),
             brand: formData.get('brand'),
